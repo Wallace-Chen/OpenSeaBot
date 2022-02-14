@@ -4,12 +4,12 @@ The script dependes on the official [opensea-js](https://github.com/ProjectOpenS
 
 # Usage
 1. Download this repository to your local;
-2. Make sure you have node environment install, and the vervion is equal to v12.18. You can use the node version manager `nvm` to easily switch between versions;
+2. Make sure you have node environment installed, and the version is equal to `v12.18`. You can use the node version manager `nvm` to easily switch between versions;
 3. Install dependent libraries/modules by:
    ```
    npm install .
    ```
-4. Copy hack/seaport.js to your local path: `node_modules/opensea-js/lib/seaport.js`. You can replace the original file or backup that.
+4. Copy `hack/seaport.js` to your local path: `node_modules/opensea-js/lib/seaport.js`. You can replace the original file or backup that.
 5. Prepare the `.env` file containing the following environmental variables:
    ```
    ALCHEMY_KEY=''
@@ -20,7 +20,7 @@ The script dependes on the official [opensea-js](https://github.com/ProjectOpenS
    PRIVATE_KEY=''
    API_KEY=''
    ```
-   where `API_KEY` is your api key to the opensea. You may apply [here](https://docs.opensea.io/reference/request-an-api-key).
+   where `API_KEY` is your api key to the opensea. You may apply [here](https://docs.opensea.io/reference/request-an-api-key). `WALLET` is your wallet address, `PRIVATE_KEY` is the private key to your wallet, and `MNEMONIC` is the seed phrases of your wallet.
 6. Cofigure proper values in the `./run.js`:
    ```
    const NFT_CONTRACT_ADDRESS = ''; // the NFT address of your interest to buy
