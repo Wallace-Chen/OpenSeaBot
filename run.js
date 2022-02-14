@@ -22,20 +22,20 @@ const isInfura = !!process.env.INFURA_KEY;
 const NETWORK = process.env.NETWORK;
 const API_KEY = process.env.API_KEY || "";
 
-const NFT_CONTRACT_ADDRESS = "0x8056ad118916db0feef1c8b82744fa37e5d57cc0";
-const GASFEE = new BigNumber(10).pow(9).multipliedBy(100);
-const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(1.1);
-const PRICE = 0.03; // find sell order below to PRICE, and auto buy, in ether.
-const OWNER_ADDRESS = 0x00;
-var ORDER_QNTY = 1;
-
-// peopleintheplace
-//const NFT_CONTRACT_ADDRESS = "0x496a2d17a89cbc4248e9b52c8003a50c648fbca0";
+//const NFT_CONTRACT_ADDRESS = "0x8056ad118916db0feef1c8b82744fa37e5d57cc0";
 //const GASFEE = new BigNumber(10).pow(9).multipliedBy(100);
-//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(2);
-//const PRICE = 3; // find sell order below to PRICE, and auto buy, in ether.
+//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(1.1);
+//const PRICE = 0.03; // find sell order below to PRICE, and auto buy, in ether.
 //const OWNER_ADDRESS = 0x00;
 //var ORDER_QNTY = 1;
+
+// peopleintheplace
+const NFT_CONTRACT_ADDRESS = "0x496a2d17a89cbc4248e9b52c8003a50c648fbca0";
+const GASFEE = new BigNumber(10).pow(9).multipliedBy(150);
+const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(3);
+const PRICE = 3; // find sell order below to PRICE, and auto buy, in ether.
+const OWNER_ADDRESS = 0x00;
+var ORDER_QNTY = 1;
 
 const ABI = "./OPENSEA.json";
 const OS_ADDR = "0x7Be8076f4EA4A4AD08075C2508e481d6C946D12b";
@@ -375,11 +375,11 @@ async function main() {
 //  let order = await getGoodOrder(start, cnt, PRICE);
 //  console.log(order);
 
-  console.log('buying the order...')
-  var _sell_order = await getSellOrderFromItem("9511");
-  var data = await fulfillOrder(_sell_order);
-  var hash = await buyOrder(data, _sell_order.currentPrice);
-  return
+//  console.log('buying the order...')
+//  var _sell_order = await getSellOrderFromItem("9511");
+//  var data = await fulfillOrder(_sell_order);
+//  var hash = await buyOrder(data, _sell_order.currentPrice);
+//  return
 
 // listening sell orders
   console.log(`--------- Auto listening sell orders on OpenSea for the collection: ${slug}, address: ${NFT_CONTRACT_ADDRESS}, the current floor is: ${col.collection.stats.floor_price} ether`);
