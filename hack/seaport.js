@@ -966,18 +966,19 @@ var OpenSeaPort = /** @class */ (function () {
                             })];
                     case 1:
                         transactionHash = _d.sent();
-                        console.log("tx sent: " + transactionHash + ", waiting...");
-                        return [4 /*yield*/, this._confirmTransaction(transactionHash, types_1.EventType.MatchOrders, "Fulfilling order", function () { return __awaiter(_this, void 0, void 0, function () {
-                                var isOpen;
-                                return __generator(this, function (_b) {
-                                    switch (_b.label) {
-                                       case 0: return [4 /*yield*/, this._validateOrder(order)];
-                                        case 1:
-                                            isOpen = _b.sent();
-                                            return [2 /*return*/, !isOpen];
-                                    }
-                                });
-                            }); })];
+                        return [2 /*return*/, transactionHash];
+//                        console.log("tx sent: " + transactionHash + ", waiting...");
+//                        return [4 /*yield*/, this._confirmTransaction(transactionHash, types_1.EventType.MatchOrders, "Fulfilling order", function () { return __awaiter(_this, void 0, void 0, function () {
+//                                var isOpen;
+//                                return __generator(this, function (_b) {
+//                                    switch (_b.label) {
+//                                       case 0: return [4 /*yield*/, this._validateOrder(order)];
+//                                        case 1:
+//                                            isOpen = _b.sent();
+//                                            return [2 /*return*/, !isOpen];
+//                                    }
+//                                });
+//                            }); })];
                     case 2:
                         _d.sent();
                         return [2 /*return*/, transactionHash];
@@ -3474,10 +3475,11 @@ var OpenSeaPort = /** @class */ (function () {
                         _d.trys.push([11, 13, , 14]);
                         this.logger("Fulfilling order with gas set to ".concat(txnData.gas));
                         if (gasFee.gt(0))
-                            txnData.maxFeePerGas = gasFee;
+                            txnData.maxFeePerGas = utils_1.makeBigNumber(gasFee.toString());
                         if (priorityFee.gt(0))
-                            txnData.maxPriorityFeePerGas = priorityFee;
-                        return [4 /*yield*/, wyvernProtocol.wyvernExchange.atomicMatch_.sendTransactionAsync(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], txnData)];
+                            txnData.maxPriorityFeePerGas = utils_1.makeBigNumber(priorityFee.toString());
+                        return [2 /*return*/, args.concat([txnData])];
+//                        return [4 /*yield*/, wyvernProtocol.wyvernExchange.atomicMatch_.sendTransactionAsync(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], txnData)];
                     case 12:
                         txHash =
                             _d.sent();
