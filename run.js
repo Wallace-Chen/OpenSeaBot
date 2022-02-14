@@ -320,7 +320,6 @@ async function buyOrder(args, _value){
   const gasLimit = await web3.eth.estimateGas(tx);
   console.log("gas limit is: " + gasLimit);
   tx.gas = parseInt(gasLimit * 1.1);
-  tx.gas = 250000;
   const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
   console.log("signed tx: " + signedTx)
   web3.eth.sendSignedTransaction(signedTx.rawTransaction, (err, hash) => {
