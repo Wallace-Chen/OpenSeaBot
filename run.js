@@ -22,23 +22,24 @@ const isInfura = !!process.env.INFURA_KEY;
 const NETWORK = process.env.NETWORK;
 const API_KEY = process.env.API_KEY || "";
 
-//const NFT_CONTRACT_ADDRESS = "0x8056ad118916db0feef1c8b82744fa37e5d57cc0";
-//const GASFEE = new BigNumber(10).pow(9).multipliedBy(100);
-//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(1.1);
-//const PRICE = 0.03; // find sell order below to PRICE, and auto buy, in ether.
-//const OWNER_ADDRESS = 0x00;
-//var ORDER_QNTY = 1;
-
-// peopleintheplace
-const NFT_CONTRACT_ADDRESS = "0x496a2d17a89cbc4248e9b52c8003a50c648fbca0";
+const NFT_CONTRACT_ADDRESS = "0x67e6e27da4aead180d1b1dd220aa7cb1d3a60b73";
 const GASFEE = new BigNumber(10).pow(9).multipliedBy(150);
-const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(3);
-const PRICE = 3; // find sell order below to PRICE, and auto buy, in ether.
+const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(2);
+const PRICE = 1; // find sell order below to PRICE, and auto buy, in ether.
 const OWNER_ADDRESS = 0x00;
 var ORDER_QNTY = 1;
 
+// peopleintheplace
+//const NFT_CONTRACT_ADDRESS = "0x496a2d17a89cbc4248e9b52c8003a50c648fbca0";
+//const GASFEE = new BigNumber(10).pow(9).multipliedBy(150);
+//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(3);
+//const PRICE = 3; // find sell order below to PRICE, and auto buy, in ether.
+//const OWNER_ADDRESS = 0x00;
+//var ORDER_QNTY = 1;
+
 const ABI = "./OPENSEA.json";
-const OS_ADDR = "0x7Be8076f4EA4A4AD08075C2508e481d6C946D12b";
+ const OS_ADDR = "0x7f268357A8c2552623316e2562D90e642bB538E5";
+//const OS_ADDR = "0x7be8076f4ea4a4ad08075c2508e481d6c946d12b";
 const BASE_DERIVATION_PATH = `44'/60'/0'/0`;
 
 const mnemonicWalletSubprovider = new MnemonicWalletSubprovider({
@@ -298,7 +299,6 @@ async function buyOrder(args, _value){
   const OSContract = new web3.eth.Contract(abi, OS_ADDR);
   const nonce = await web3.eth.getTransactionCount(WALLET, "latest") //get latest nonce
 
-  console.log(args);
   args[1][0] = "0x"+args[1][0].toString(16); args[1][1] = "0x"+args[1][1].toString(16); args[1][2] = "0x"+args[1][2].toString(16);
   args[1][3] = "0x"+args[1][3].toString(16); args[1][4] = "0x"+args[1][4].toString(16); args[1][5] = "0x"+args[1][5].toString(16);
   args[1][6] = "0x"+args[1][6].toString(16); args[1][7] = "0x"+args[1][7].toString(16); args[1][8] = "0x"+args[1][8].toString(16);
@@ -317,19 +317,20 @@ async function buyOrder(args, _value){
     maxPriorityFeePerGas: PRIORITYFEE,
     data: OSContract.methods["atomicMatch_"](args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8],args[9],args[10]).encodeABI(),
   };
+  console.log(tx);
   const gasLimit = await web3.eth.estimateGas(tx);
   console.log("gas limit is: " + gasLimit);
   tx.gas = parseInt(gasLimit * 1.1);
   const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
   console.log("signed tx: " + signedTx)
-  web3.eth.sendSignedTransaction(signedTx.rawTransaction, (err, hash) => {
-    if (!err) {
-      console.log("The hash of your transaction is: ",hash)
-    } else {
-      console.log("Error when sending buy order: ",err)
-      throw new Error("Error when sending buy order: "+err);
-    }
-  });
+//  web3.eth.sendSignedTransaction(signedTx.rawTransaction, (err, hash) => {
+//    if (!err) {
+//      console.log("The hash of your transaction is: ",hash)
+//    } else {
+//      console.log("Error when sending buy order: ",err)
+//      throw new Error("Error when sending buy order: "+err);
+//    }
+//  });
 
 }
 
@@ -375,11 +376,11 @@ async function main() {
 //  let order = await getGoodOrder(start, cnt, PRICE);
 //  console.log(order);
 
-//  console.log('buying the order...')
-//  var _sell_order = await getSellOrderFromItem("9511");
-//  var data = await fulfillOrder(_sell_order);
-//  var hash = await buyOrder(data, _sell_order.currentPrice);
-//  return
+  console.log('buying the order...')
+  var _sell_order = await getSellOrderFromItem("1856");
+  var data = await fulfillOrder(_sell_order);
+  var hash = await buyOrder(data, _sell_order.currentPrice);
+  return
 
 // listening sell orders
   console.log(`--------- Auto listening sell orders on OpenSea for the collection: ${slug}, address: ${NFT_CONTRACT_ADDRESS}, the current floor is: ${col.collection.stats.floor_price} ether`);

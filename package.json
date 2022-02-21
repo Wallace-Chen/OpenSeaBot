@@ -1,6 +1,6 @@
 {
   "name": "OpenSeaBot",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "run.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,11 +11,11 @@
     "@0x/subproviders": "^6.6.2",
     "@alch/alchemy-web3": "^1.1.9",
     "axios": "^0.24.0",
+    "big-number": "^2.0.0",
     "dotenv": "^10.0.0",
     "fast-csv": "^4.3.6",
     "node-schedule": "^2.1.0",
-    "opensea-js": "^2.0.0",
-    "big-number": "^2.0.0",
+    "opensea-js": "^2.0.1",
     "web3": "^1.7.0"
   }
 }
