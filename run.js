@@ -323,14 +323,14 @@ async function buyOrder(args, _value){
   tx.gas = parseInt(gasLimit * 1.1);
   const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
   console.log("signed tx: " + signedTx)
-//  web3.eth.sendSignedTransaction(signedTx.rawTransaction, (err, hash) => {
-//    if (!err) {
-//      console.log("The hash of your transaction is: ",hash)
-//    } else {
-//      console.log("Error when sending buy order: ",err)
-//      throw new Error("Error when sending buy order: "+err);
-//    }
-//  });
+  web3.eth.sendSignedTransaction(signedTx.rawTransaction, (err, hash) => {
+    if (!err) {
+      console.log("The hash of your transaction is: ",hash)
+    } else {
+      console.log("Error when sending buy order: ",err)
+      throw new Error("Error when sending buy order: "+err);
+    }
+  });
 
 }
 
@@ -376,11 +376,11 @@ async function main() {
 //  let order = await getGoodOrder(start, cnt, PRICE);
 //  console.log(order);
 
-  console.log('buying the order...')
-  var _sell_order = await getSellOrderFromItem("1856");
-  var data = await fulfillOrder(_sell_order);
-  var hash = await buyOrder(data, _sell_order.currentPrice);
-  return
+//  console.log('buying the order...')
+//  var _sell_order = await getSellOrderFromItem("1856");
+//  var data = await fulfillOrder(_sell_order);
+//  var hash = await buyOrder(data, _sell_order.currentPrice);
+//  return
 
 // listening sell orders
   console.log(`--------- Auto listening sell orders on OpenSea for the collection: ${slug}, address: ${NFT_CONTRACT_ADDRESS}, the current floor is: ${col.collection.stats.floor_price} ether`);
