@@ -3583,7 +3583,7 @@ var OpenSeaPort = /** @class */ (function () {
                             expirationTime: order.expirationTime.toString(),
                             salt: order.salt.toString(),
                         };
-                        message = JSON.stringify({
+                        message = {
                             types: constants_1.EIP_712_ORDER_TYPES,
                             domain: {
                                 name: constants_1.EIP_712_WYVERN_DOMAIN_NAME,
@@ -3593,7 +3593,7 @@ var OpenSeaPort = /** @class */ (function () {
                             },
                             primaryType: "Order",
                             message: __assign(__assign({}, orderForSigning), { nonce: signerOrderNonce.toNumber() }),
-                        });
+                        };
                         return [4 /*yield*/, (0, utils_1.signTypedDataAsync)(this.web3, message, signerAddress)];
                     case 5:
                         ecSignature = _b.sent();
