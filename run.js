@@ -371,14 +371,14 @@ async function buyOrder(args, _value){
   tx.gas = parseInt(gasLimit * 1.1);
   const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
   console.log("signed tx: " + signedTx)
-//  web3.eth.sendSignedTransaction(signedTx.rawTransaction, (err, hash) => {
-//    if (!err) {
-//      console.log("The hash of your transaction is: ",hash)
-//    } else {
-//      console.log("Error when sending buy order: ",err)
-//      throw new Error("Error when sending buy order: "+err);
-//    }
-//  });
+  web3.eth.sendSignedTransaction(signedTx.rawTransaction, (err, hash) => {
+    if (!err) {
+      console.log("The hash of your transaction is: ",hash)
+    } else {
+      console.log("Error when sending buy order: ",err)
+      throw new Error("Error when sending buy order: "+err);
+    }
+  });
 
 }
 

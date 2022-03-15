@@ -4,7 +4,7 @@ There are two javascript files under this repository:
 `./run.js`: a simple js script to automatically buy ERC-721 item from OpenSea under specified price limit.
 The script dependes on the official [opensea-js](https://github.com/ProjectOpenSea/opensea-js/tree/master).
 
-`./make_offer.js`: a script to automatically make offers for some specified NFT projects on OpenSea.
+`./make_offer.js`: a script to automatically make offers for some specified NFT projects on OpenSea. It is intended to be used together with the repo [OpenSea Lister](https://github.com/Wallace-Chen/OpenSea-Lister).
 
 # Usage
 1. Download this repository to your local;
