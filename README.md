@@ -1,6 +1,10 @@
 # OpenSea Bot
-A simple js script to automatically buy ERC-721 item from OpenSea under specified price limit.
+There are two javascript files under this repository:
+
+`./run.js`: a simple js script to automatically buy ERC-721 item from OpenSea under specified price limit.
 The script dependes on the official [opensea-js](https://github.com/ProjectOpenSea/opensea-js/tree/master).
+
+`./make_offer.js`: a script to automatically make offers for some specified NFT projects on OpenSea.
 
 # Usage
 1. Download this repository to your local;
@@ -29,9 +33,24 @@ The script dependes on the official [opensea-js](https://github.com/ProjectOpenS
    const PRICE = 1.0; // the max price you're willing to pay for one NFT, in the unit of ether
    var ORDER_QNTY = 1; // the amount of NFTs you want to buy
    ```
+   and in the `./make_offer.js`:
+   ```
+   var TARGET_RATIO = 1.2; // program will make offers for items with listed price below: FP*TARGET_RATIO in ethers
+   var offer_valid = 900; // the seconds for which the offer is valid
+
+   const NFT_CONTRACT_ADDRESS = ''; // the NFT address you want to make offer
+   var PRICE_RATIO = 0.7; // the program starts to make offers from the price: FP*PRICE_RATIO in ethers
+   BELOW_RATIO = 0.9; // one of the max offer price
+   var TOP_PRICE = 8; // another max offer price
+   ```
+
 7. Execute the script:
    ```
    node ./run.js
+   ```
+   or,
+   ```
+   node ./make_offer.js
    ```
 
 # Note

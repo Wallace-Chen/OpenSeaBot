@@ -22,20 +22,29 @@ const isInfura = !!process.env.INFURA_KEY;
 const NETWORK = process.env.NETWORK;
 const API_KEY = process.env.API_KEY || "";
 
-//const NFT_CONTRACT_ADDRESS = "0x8056ad118916db0feef1c8b82744fa37e5d57cc0";
-//const GASFEE = new BigNumber(10).pow(9).multipliedBy(100);
-//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(1.1);
-//const PRICE = 0.03; // find sell order below to PRICE, and auto buy, in ether.
-//const OWNER_ADDRESS = 0x00;
-//var ORDER_QNTY = 1;
-
-// peopleintheplace
-const NFT_CONTRACT_ADDRESS = "0x496a2d17a89cbc4248e9b52c8003a50c648fbca0";
+// 3Lander
+const NFT_CONTRACT_ADDRESS = "0xb4d06d46a8285f4ec79fd294f78a881799d8ced9";
 const GASFEE = new BigNumber(10).pow(9).multipliedBy(150);
-const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(3);
+const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(11);
 const PRICE = 3; // find sell order below to PRICE, and auto buy, in ether.
 const OWNER_ADDRESS = 0x00;
 var ORDER_QNTY = 1;
+
+// World Webb land
+//const NFT_CONTRACT_ADDRESS = "0xa1d4657e0e6507d5a94d06da93e94dc7c8c44b51";
+//const GASFEE = new BigNumber(10).pow(9).multipliedBy(150);
+//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(11);
+//const PRICE = 2; // find sell order below to PRICE, and auto buy, in ether.
+//const OWNER_ADDRESS = 0x00;
+//var ORDER_QNTY = 1;
+
+// Karafuru
+//const NFT_CONTRACT_ADDRESS = "0xd2f668a8461d6761115daf8aeb3cdf5f40c532c6";
+//const GASFEE = new BigNumber(10).pow(9).multipliedBy(150);
+//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(11);
+//const PRICE = 3; // find sell order below to PRICE, and auto buy, in ether.
+//const OWNER_ADDRESS = 0x00;
+//var ORDER_QNTY = 1;
 
 const ABI = "./OPENSEA.json";
 const OS_ADDR = "0x7Be8076f4EA4A4AD08075C2508e481d6C946D12b";
@@ -76,36 +85,64 @@ const seaport = new OpenSeaPort(
   (arg) => console.log(arg)
 );
 
-async function getEvents(afterTime, evt) {
+function convertUnix(timeString){
+  var time = new Date(timeString+'Z');
+  return parseInt( Date.parse(time.toUTCString()) / 1000 );
+  return parseInt( Date.parse(time) / 1000 );
+}
+
+async function getEvents(afterTime, _evt) {
+  let payment_token = '0x0000000000000000000000000000000000000000';
+  if(_evt == "created"){
+  }else if(_evt == "offer_entered"){
+    payment_token = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
+  }else{
+    return [[], 0];
+  }
+
   const url = "https://api.opensea.io/api/v1/events";
   const params = {
+//    cursor: 'LWV2ZW50X3RpbWVzdGFtcD0yMDIyLTAzLTEwKzA0JTNBNTklM0E0OC42OTQ1MTMmLXBrPTM5OTk5MjIyMzI=',
     asset_contract_address: NFT_CONTRACT_ADDRESS,
     only_opensea: true,
-    event_type: evt,
-    limit: 300,
-    occurred_after: afterTime,
+    event_type: _evt,
+    limit: 50,
+//    occurred_before: afterTime,
 //    auction_type: 'dutch'
   };
   var allEvents = [];
   var price_map = {};
+  var valid = true;
   try{
     while(true){
       const response = await axios.get(url, {
         params: params,
-        headers: {'X-API-KEY': API_KEY},
+        headers: {Accept: 'application/json', 'X-API-KEY': API_KEY},
       });
       if(response.status !== 200){
         throw new Error("[getEvents] Failed to get events: "+String(response.status));
       }
       const events = response.data["asset_events"];
-      allEvents.push(...events);
-      if(events.length < 300){
+      for(const e of events){
+        if( convertUnix(e.created_date) < afterTime ){
+          valid = false;
+          break;
+        }
+        if( !e.is_private && e.payment_token.address == payment_token ){
+          allEvents.push(e);
+        }
+      }
+
+      if( !valid ){
         break;
       }
-      params.offset += 300;
+      params.cursor = response.data.next;
+    }
+    if(_evt == "offer_entered"){
+      return [allEvents, 1];
     }
     allEvents.forEach( evt => {
-      if(evt && evt.asset && evt.asset.token_id && evt.ending_price === evt.starting_price && evt.auction_type === "dutch"){
+      if(evt && evt.asset && evt.asset.token_id){
         if(!(evt.asset.token_id in price_map)){
           price_map[evt.asset.token_id] = parseFloat(web3.utils.fromWei(evt.ending_price, "ether"));
         }else{
@@ -132,7 +169,15 @@ async function getCollection(slug){
     method: 'GET',
     headers: {Accept: 'application/json', 'X-API-KEY': API_KEY}
   };
-  return fetch('https://api.opensea.io/api/v1/collection/'+slug, options).then( response => response.json() )
+  flag = false;
+  while(!flag){
+    try{
+      return fetch('https://api.opensea.io/api/v1/collection/'+slug, options).then( response => response.json() )
+      flag = true;
+    }catch(e){
+      flag = false;
+    }
+  }
 }
 
 async function getFloorPrice(cnt){
@@ -245,7 +290,7 @@ async function getGoodOrder(unix, cnt, thred){
   }
 }
 
-async function listenGoodOrder(unix, thred, slug, interval=2){
+async function listenGoodOrder(unix, thred, slug, interval=3){
   const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
   var time_after = unix;
   var start = unix;
@@ -258,9 +303,13 @@ async function listenGoodOrder(unix, thred, slug, interval=2){
       time_after = Math.round(Date.now() / 1000);
     }
     if(time_after-start > 60){
-      col = await getCollection(slug);
-      console.log(`\n--------- the current floor price is ${col.collection.stats.floor_price} ether, will auto-buy orders under ${PRICE} ether\n`);
-      start = time_after
+      try{
+        col = await getCollection(slug);
+        console.log(`\n--------- the current floor price is ${col.collection.stats.floor_price} ether, will auto-buy orders under ${PRICE} ether\n`);
+        start = time_after
+      }catch(e){
+        console.log("Error occur when fetching the collection: " + e);
+      }
     }
     await sleep(1000*interval);
   }
@@ -322,14 +371,14 @@ async function buyOrder(args, _value){
   tx.gas = parseInt(gasLimit * 1.1);
   const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
   console.log("signed tx: " + signedTx)
-  web3.eth.sendSignedTransaction(signedTx.rawTransaction, (err, hash) => {
-    if (!err) {
-      console.log("The hash of your transaction is: ",hash)
-    } else {
-      console.log("Error when sending buy order: ",err)
-      throw new Error("Error when sending buy order: "+err);
-    }
-  });
+//  web3.eth.sendSignedTransaction(signedTx.rawTransaction, (err, hash) => {
+//    if (!err) {
+//      console.log("The hash of your transaction is: ",hash)
+//    } else {
+//      console.log("Error when sending buy order: ",err)
+//      throw new Error("Error when sending buy order: "+err);
+//    }
+//  });
 
 }
 
