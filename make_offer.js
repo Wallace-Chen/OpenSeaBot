@@ -72,16 +72,18 @@ var offer_valid = 900; // seconds for which our offer is valid
 
 // CoolCats, 5% fee
 //const NFT_CONTRACT_ADDRESS = "0x1a92f7381b9f03921564a437210bb9396471050c";
-//const GASFEE = new BigNumber(10).pow(9).multipliedBy(500);
-//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(11);
 //LOW_RATIO = 0.7; 
-//TOP_RATIO = 0.9;
-//TOP_PRICE = 8;
+//TOP_RATIO = 0.905;
+//TOP_PRICE = 6.59;
+
+// Invisible Friends, 7.5% fee
+//const NFT_CONTRACT_ADDRESS = "0x59468516a8259058bad1ca5f8f4bff190d30e066";
+//LOW_RATIO = 0.7;
+//TOP_RATIO = 0.87;
+//TOP_PRICE = 6.59;
 
 // Doodles, 7.5% fee
 //const NFT_CONTRACT_ADDRESS = "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e";
-//const GASFEE = new BigNumber(10).pow(9).multipliedBy(500);
-//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(11);
 //LOW_RATIO = 0.77; // find sell order below to PRICE, and auto buy, in ether.
 //TOP_RATIO = 0.87;
 //TOP_PRICE = 13;
@@ -93,17 +95,17 @@ var offer_valid = 900; // seconds for which our offer is valid
 //TOP_PRICE = 3;
 
 // 3D Landers, 9% fee
-//const NFT_CONTRACT_ADDRESS = "0xb4d06d46a8285f4ec79fd294f78a881799d8ced9";
-//LOW_RATIO = 0.7; // find sell order below to PRICE, and auto buy, in ether.
-//TOP_RATIO = 0.81;
-//TOP_PRICE = 2;
+const NFT_CONTRACT_ADDRESS = "0xb4d06d46a8285f4ec79fd294f78a881799d8ced9";
+LOW_RATIO = 0.7; // find sell order below to PRICE, and auto buy, in ether.
+TOP_RATIO = 0.81;
+TOP_PRICE = 2;
 
 // CrypToadz 5%
-const NFT_CONTRACT_ADDRESS = "0x1cb1a5e65610aeff2551a50f76a87a7d3fb649c6";
-LOW_RATIO = 0.7;
-TOP_RATIO = 0.885;
-TOP_PRICE = 4;
-TARGET_RATIO = 2;
+//const NFT_CONTRACT_ADDRESS = "0x1cb1a5e65610aeff2551a50f76a87a7d3fb649c6";
+//LOW_RATIO = 0.7;
+//TOP_RATIO = 0.885;
+//TOP_PRICE = 4;
+//TARGET_RATIO = 2;
 
 // MURI 10.5%
 //const NFT_CONTRACT_ADDRESS = "0x4b61413d4392c806e6d0ff5ee91e6073c21d6430";
@@ -461,19 +463,20 @@ async function listenGoodOrder(unix, thred, slug, interval=20){
     }
 
     // check new offers
-    [offers, bid_res] = await getEvents(bid_time_after, "offer_entered");
-    if(bid_res){
-      bid_time_after = Math.round(Date.now() / 1000) - 1;
+    if( ids_offered.size > 0 ){
+      [offers, bid_res] = await getEvents(bid_time_after, "offer_entered");
+      if(bid_res){
+        bid_time_after = Math.round(Date.now() / 1000) - 1;
+      }
+      if(offers.length > 0){
+        console.log("checking offers from " + timestapConvert(bid_time_after));
+        await checkOffers(offers);
+      }
+      await sleep(1000*interval);
     }
-    if(offers.length > 0){
-      console.log("checking offers from " + timestapConvert(bid_time_after));
-      await checkOffers(offers);
-    }
-    await sleep(1000*interval);
 
     // check expired offers...
     if( Math.round(Date.now() / 1000) - update_time > 60 ){
-      console.log("\nupdating expired offers from " + timestapConvert(Math.round(Date.now() / 1000)) );
       update_time = Math.round(Date.now() / 1000);
       ids_offered = await updateOffers(ids_offered);
     }
