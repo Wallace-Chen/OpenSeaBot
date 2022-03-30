@@ -27,60 +27,49 @@ var FP = .01;
 var BELOW_FP = true;
 var LOW_RATIO = 0.5; // our offer price will start from LOW_RATIO*FP
 var TOP_RATIO = 0.8; // the top offer price is TOP_RATIO*FP
-var TARGET_RATIO = 1.3; // when list price is under TARGET_RATIO*FP, we will make offer
-var TOP_PRICE = 1; // the hard coded top offer limit
+var TARGET_RATIO = 1.5; // when list price is under TARGET_RATIO*FP, we will make offer
+var TOP_PRICE = 8; // the hard coded top offer limit
 var offer_valid = 900; // seconds for which our offer is valid
 
 // MAYC, 5% fee
 //const NFT_CONTRACT_ADDRESS = "0x60e4d786628fea6478f785a6d7e704777c86a7c6";
-//const GASFEE = new BigNumber(10).pow(9).multipliedBy(500);
-//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(11);
 //LOW_RATIO = 0.75; 
 //TOP_RATIO = 0.91;
 //TOP_PRICE = 18;
 
 // NFT World, 12% fee
 //const NFT_CONTRACT_ADDRESS = "0xbd4455da5929d5639ee098abfaa3241e9ae111af";
-//const GASFEE = new BigNumber(10).pow(9).multipliedBy(500);
-//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(11);
 //LOW_RATIO = 0.7; 
 //TOP_RATIO = 0.82;
 //TOP_PRICE = 10;
 
 // World Webb Land, 7.5% fee
 //const NFT_CONTRACT_ADDRESS = "0xa1d4657e0e6507d5a94d06da93e94dc7c8c44b51";
-//const GASFEE = new BigNumber(10).pow(9).multipliedBy(500);
-//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(11);
 //LOW_RATIO = 0.7; 
 //TOP_RATIO = 0.85;
 //TOP_PRICE = 2;
 
 // Godjira Gen 2, 12.5% fee
 //const NFT_CONTRACT_ADDRESS = "0xedc3ad89f7b0963fe23d714b34185713706b815b";
-//const GASFEE = new BigNumber(10).pow(9).multipliedBy(500);
-//const PRIORITYFEE = new BigNumber(10).pow(9).multipliedBy(11);
 //LOW_RATIO = 0.65; 
 //TOP_RATIO = 0.78;
 //TOP_PRICE = 1.8;
 
 // Meebits, 2.5% fee
-//const NFT_CONTRACT_ADDRESS = "0x7bd29408f11d2bfc23c34f18275bbf23bb716bc7";
-//LOW_RATIO = 0.8; 
-//TOP_RATIO = 0.935;
-//TOP_PRICE = 6;
-//TARGET_RATIO = 1.5;
+const NFT_CONTRACT_ADDRESS = "0x7bd29408f11d2bfc23c34f18275bbf23bb716bc7";
+LOW_RATIO = 0.8; 
+TOP_RATIO = 0.921;
+TARGET_RATIO = 1.5;
 
 // CoolCats, 5% fee
 //const NFT_CONTRACT_ADDRESS = "0x1a92f7381b9f03921564a437210bb9396471050c";
-//LOW_RATIO = 0.7; 
-//TOP_RATIO = 0.905;
-//TOP_PRICE = 6.59;
+//LOW_RATIO = 0.8; 
+//TOP_RATIO = 0.906;
 
 // Invisible Friends, 7.5% fee
 //const NFT_CONTRACT_ADDRESS = "0x59468516a8259058bad1ca5f8f4bff190d30e066";
-//LOW_RATIO = 0.7;
-//TOP_RATIO = 0.87;
-//TOP_PRICE = 6.59;
+//LOW_RATIO = 0.8;
+//TOP_RATIO = 0.871;
 
 // Doodles, 7.5% fee
 //const NFT_CONTRACT_ADDRESS = "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e";
@@ -95,16 +84,46 @@ var offer_valid = 900; // seconds for which our offer is valid
 //TOP_PRICE = 3;
 
 // 3D Landers, 9% fee
-const NFT_CONTRACT_ADDRESS = "0xb4d06d46a8285f4ec79fd294f78a881799d8ced9";
-LOW_RATIO = 0.7; // find sell order below to PRICE, and auto buy, in ether.
-TOP_RATIO = 0.81;
-TOP_PRICE = 2;
+//const NFT_CONTRACT_ADDRESS = "0xb4d06d46a8285f4ec79fd294f78a881799d8ced9";
+//LOW_RATIO = 0.7; // find sell order below to PRICE, and auto buy, in ether.
+//TOP_RATIO = 0.81;
+//TOP_PRICE = 2;
 
 // CrypToadz 5%
 //const NFT_CONTRACT_ADDRESS = "0x1cb1a5e65610aeff2551a50f76a87a7d3fb649c6";
-//LOW_RATIO = 0.7;
-//TOP_RATIO = 0.885;
+//LOW_RATIO = 0.75;
+//TOP_RATIO = 0.891;
 //TOP_PRICE = 4;
+//TARGET_RATIO = 2;
+
+// BAKC 2.5%
+//const NFT_CONTRACT_ADDRESS = "0xba30e5f9bb24caa003e9f2f0497ad287fdf95623";
+//LOW_RATIO = 0.8;
+//TOP_RATIO = 0.931;
+//TARGET_RATIO = 1.5;
+
+// mfers 5%
+//const NFT_CONTRACT_ADDRESS = "0x79fcdef22feed20eddacbb2587640e45491b757f";
+//LOW_RATIO = 0.8;
+//TOP_RATIO = 0.891;
+//TARGET_RATIO = 1.5;
+
+// cyberkongz 5%
+//const NFT_CONTRACT_ADDRESS = "0x57a204aa1042f6e66dd7730813f4024114d74f37";
+//LOW_RATIO = 0.8;
+//TOP_RATIO = 0.891;
+//TARGET_RATIO = 1.5;
+
+// sandbox 5%
+//const NFT_CONTRACT_ADDRESS = "0x5cc5b05a8a13e3fbdb0bb9fccd98d38e50f90c38";
+//LOW_RATIO = 0.8;
+//TOP_RATIO = 0.891;
+//TARGET_RATIO = 1.5;
+
+// Metroverse 7.5%
+//const NFT_CONTRACT_ADDRESS = "0x0e9d6552b85be180d941f1ca73ae3e318d2d4f1f";
+//LOW_RATIO = 0.7;
+//TOP_RATIO = 0.831;
 //TARGET_RATIO = 2;
 
 // MURI 10.5%
@@ -114,6 +133,13 @@ TOP_PRICE = 2;
 //TOP_PRICE = 1;
 //TARGET_RATIO = 1.1;
 
+const api_keys = [
+"3940c5b8cf4a4647bc22ff9b0a84f75a",
+"f87d8ef226cd45b0b89d7c4b001ff74d",
+"f9db001792614c0ea01ef78616d6d2be"
+];
+var idx = 0;
+var idx_seaport = 0;
 var bal;
 var ids_offered = new Map();
 var update_time = Math.round(Date.now() / 1000);
@@ -147,22 +173,74 @@ providerEngine.addProvider(mnemonicWalletSubprovider);
 providerEngine.addProvider(infuraRpcSubprovider);
 providerEngine.start();
 
-const seaport = new OpenSeaPort(
+const seaport_0 = new OpenSeaPort(
   providerEngine,
   {
     networkName:
       NETWORK === "mainnet" || NETWORK === "live"
         ? Network.Main
         : Network.Rinkeby,
-    apiKey: API_KEY,
+    apiKey: api_keys[0],
   },
   (arg) => console.log(arg)
 );
+const seaport_1 = new OpenSeaPort(
+  providerEngine,
+  {
+    networkName:
+      NETWORK === "mainnet" || NETWORK === "live"
+        ? Network.Main
+        : Network.Rinkeby,
+    apiKey: api_keys[1],
+  },
+  (arg) => console.log(arg)
+);
+const seaport_2 = new OpenSeaPort(
+  providerEngine,
+  {
+    networkName:
+      NETWORK === "mainnet" || NETWORK === "live"
+        ? Network.Main
+        : Network.Rinkeby,
+    apiKey: api_keys[2],
+  },
+  (arg) => console.log(arg)
+);
+
+const seaports = [seaport_0, seaport_1, seaport_2];
+
+function getAPIKey(){
+    idx = (idx + 1) % 3;
+    return api_keys[idx];
+}
+
+function getSeaport(){
+    idx_seaport = (idx + 1) % 3;
+    return seaports[idx_seaport];
+}
 
 function convertUnix(timeString){
   var time = new Date(timeString+'Z');
   return parseInt( Date.parse(time.toUTCString()) / 1000 );
   return parseInt( Date.parse(time) / 1000 );
+}
+
+async function getBalance(wallet){
+
+    let bal = 0;
+    var suc = false;
+    while(!suc){
+        try{
+            bal = await web3.eth.getBalance(wallet);
+            bal = parseFloat( web3.utils.fromWei(bal, "ether") );
+            suc = true;
+        }catch(e){
+            console.log('Error in getBalance: ' + e);
+            await sleep(1000);
+        }
+    }
+    return bal;
+
 }
 
 async function getEvents(afterTime, _evt) {
@@ -191,7 +269,7 @@ async function getEvents(afterTime, _evt) {
     while(true){
       const response = await axios.get(url, {
         params: params,
-        headers: {Accept: 'application/json', 'X-API-KEY': API_KEY},
+        headers: {Accept: 'application/json', 'X-API-KEY': getAPIKey()},
       });
       if(response.status !== 200){
         throw new Error("[getEvents] Failed to get events: "+String(response.status));
@@ -244,7 +322,7 @@ async function getTopOffers(tokenId){
   let results;
   while(!suc){
     try{
-      results = await seaport.api.getOrders({
+      results = await getSeaport().api.getOrders({
         asset_contract_address: NFT_CONTRACT_ADDRESS,
         token_id: tokenId,
         side: 0,
@@ -400,7 +478,7 @@ async function getSellOrderFromItem(id){
   var suc = false;
   while(!suc){
   try{
-    order = await seaport.api.getOrder({
+    order = await getSeaport().api.getOrder({
         asset_contract_address: NFT_CONTRACT_ADDRESS,
         token_ids: id,
         side: 1, //OrderSide.Sell,
@@ -423,7 +501,7 @@ async function getSellOrderFromItem(id){
 async function getCollection(slug){
   const options = {
     method: 'GET',
-    headers: {Accept: 'application/json', 'X-API-KEY': API_KEY}
+    headers: {Accept: 'application/json', 'X-API-KEY': getAPIKey()}
   };
   var suc = false;
   while(!suc){
@@ -454,7 +532,7 @@ async function listenGoodOrder(unix, thred, slug, interval=20){
       console.log(`\n--------- the current floor price is ${FP} ether, will auto make offer of ${_offerPrice} ethers for orders under ${thred} ether\n`);
       start = time_after;
 
-      bal = await web3.eth.getBalance(WALLET);
+      bal = await getBalance(WALLET);
       if(bal < LOW_RATIO*FP){
         console.log('balance not enough to make offer, sleeping...');
         await sleep(1000*60);
@@ -515,7 +593,7 @@ async function makeOffer(_tokenId, price, valids){
     while(!suc && times_remaining>0){
         times_remaining = times_remaining - 1;
         try{
-            offer = await seaport.createBuyOrder({
+            offer = await getSeaport().createBuyOrder({
                 asset: {
                 tokenId: _tokenId,
                 tokenAddress: NFT_CONTRACT_ADDRESS
@@ -551,12 +629,12 @@ async function main() {
   let asset;
   while(!flag){
     try{
-      asset = await seaport.api.getAsset({tokenAddress:NFT_CONTRACT_ADDRESS, tokenId:"1"});
+      asset = await getSeaport().api.getAsset({tokenAddress:NFT_CONTRACT_ADDRESS, tokenId:"1"});
       flag = true;
     }catch(e){
       console.log("Error fetching the data from OpenSea");
       flag = false;
-      sleep(2000);
+      await sleep(2000);
     }
   }
   const slug = asset.collection.slug;
@@ -591,7 +669,7 @@ async function main() {
 // listening sell orders
   console.log(`--------- Auto listening sell orders on OpenSea for the collection: ${slug}, address: ${NFT_CONTRACT_ADDRESS}, the current floor is: ${FP} ether`);
   console.log(`The program will make offers of ${offerPrice} ethers for orders under ${FP*TARGET_RATIO} ethers.`);
-  bal = await web3.eth.getBalance(WALLET);
+  bal = await getBalance(WALLET);
   while(1){
     var good_orders;
     [good_orders, start] = await listenGoodOrder(start, FP*TARGET_RATIO, slug);
@@ -599,16 +677,17 @@ async function main() {
     for(let order of good_orders){
       try{
         if( ids_offered.has(order[0]) ) continue;
-        var let = await makeOffer(order[0], offerPrice, offer_valid);
-        ids_offered.set( order[0], [offerPrice, Math.round(Date.now()/1000)] );
-        console.log('!!!!!!!!!!\n');
-        console.log(`Offer made: ${offerPrice} ethers for the tokenId ${order[0]} with the listing price ${order[1]} ethers, at ${timestapConvert( Math.round(Date.now()/1000) )}`);
-        console.log('\n!!!!!!!!!!\n');
+        var ret = await makeOffer(order[0], offerPrice, offer_valid);
+        if(ret){
+            ids_offered.set( order[0], [offerPrice, Math.round(Date.now()/1000)] );
+            console.log('!!!!!!!!!!\n');
+            console.log(`Offer made: ${offerPrice} ethers for the tokenId ${order[0]} with the listing price ${order[1]} ethers, at ${timestapConvert( Math.round(Date.now()/1000) )}`);
+            console.log('\n!!!!!!!!!!\n');
 
-        var top_offer = await getTopOffers(order[0]);
-        var other_offers = [top_offer];
-        await checkOfferOrders(other_offers);
-
+            var top_offer = await getTopOffers(order[0]);
+            var other_offers = [top_offer];
+            await checkOfferOrders(other_offers);
+        }
       }catch (e){
         console.log("Error: main, "+e);
         continue;
