@@ -56,10 +56,10 @@ var offer_valid = 900; // seconds for which our offer is valid
 //TOP_PRICE = 1.8;
 
 // Meebits, 2.5% fee
-const NFT_CONTRACT_ADDRESS = "0x7bd29408f11d2bfc23c34f18275bbf23bb716bc7";
-LOW_RATIO = 0.8; 
-TOP_RATIO = 0.921;
-TARGET_RATIO = 1.5;
+//const NFT_CONTRACT_ADDRESS = "0x7bd29408f11d2bfc23c34f18275bbf23bb716bc7";
+//LOW_RATIO = 0.8; 
+//TOP_RATIO = 0.921;
+//TARGET_RATIO = 1.5;
 
 // CoolCats, 5% fee
 //const NFT_CONTRACT_ADDRESS = "0x1a92f7381b9f03921564a437210bb9396471050c";
@@ -97,10 +97,10 @@ TARGET_RATIO = 1.5;
 //TARGET_RATIO = 2;
 
 // BAKC 2.5%
-//const NFT_CONTRACT_ADDRESS = "0xba30e5f9bb24caa003e9f2f0497ad287fdf95623";
-//LOW_RATIO = 0.8;
-//TOP_RATIO = 0.931;
-//TARGET_RATIO = 1.5;
+const NFT_CONTRACT_ADDRESS = "0xba30e5f9bb24caa003e9f2f0497ad287fdf95623";
+LOW_RATIO = 0.8;
+TOP_RATIO = 0.931;
+TARGET_RATIO = 1.5;
 
 // mfers 5%
 //const NFT_CONTRACT_ADDRESS = "0x79fcdef22feed20eddacbb2587640e45491b757f";
@@ -149,6 +149,17 @@ const ABI = "./OPENSEA.json";
  const OS_ADDR = "0x7f268357A8c2552623316e2562D90e642bB538E5";
 //const OS_ADDR = "0x7be8076f4ea4a4ad08075c2508e481d6c946d12b";
 const BASE_DERIVATION_PATH = `44'/60'/0'/0`;
+
+const TRANSFER_ABI = [
+    {"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},
+    {"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
+];
+
+const WETH_ABI = [
+    {"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}
+]
+
+const WETH_ADDR = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 
 const mnemonicWalletSubprovider = new MnemonicWalletSubprovider({
   mnemonic: MNEMONIC,
@@ -210,12 +221,14 @@ const seaport_2 = new OpenSeaPort(
 const seaports = [seaport_0, seaport_1, seaport_2];
 
 function getAPIKey(){
-    idx = (idx + 1) % 3;
+    idx = idx + 1;
+    idx = idx % 3;
     return api_keys[idx];
 }
 
 function getSeaport(){
-    idx_seaport = (idx + 1) % 3;
+    idx_seaport = idx_seaport + 1;
+    idx_seaport = idx % 3;
     return seaports[idx_seaport];
 }
 
@@ -231,7 +244,8 @@ async function getBalance(wallet){
     var suc = false;
     while(!suc){
         try{
-            bal = await web3.eth.getBalance(wallet);
+            const Contract = new web3.eth.Contract( WETH_ABI, WETH_ADDR );
+            bal = await Contract.methods.balanceOf( WALLET ).call();
             bal = parseFloat( web3.utils.fromWei(bal, "ether") );
             suc = true;
         }catch(e){
