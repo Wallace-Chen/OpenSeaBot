@@ -221,14 +221,12 @@ const seaport_2 = new OpenSeaPort(
 const seaports = [seaport_0, seaport_1, seaport_2];
 
 function getAPIKey(){
-    idx = idx + 1;
-    idx = idx % 3;
+    idx = (idx + 1) % 3;
     return api_keys[idx];
 }
 
 function getSeaport(){
-    idx_seaport = idx_seaport + 1;
-    idx_seaport = idx % 3;
+    idx_seaport = (idx_seaport + 1) % 3;
     return seaports[idx_seaport];
 }
 
