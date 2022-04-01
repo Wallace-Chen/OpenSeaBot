@@ -624,28 +624,19 @@ var OpenSeaPort = /** @class */ (function () {
                             })];
                     case 1:
                         order = _e.sent();
-                        // NOTE not in Wyvern exchange code:
-                        // frontend checks to make sure
-                        // token is approved and sufficiently available
-                        return [4 /*yield*/, this._buyOrderValidationAndApprovals({ order: order, accountAddress: accountAddress })];
-                    case 2:
-                        // NOTE not in Wyvern exchange code:
-                        // frontend checks to make sure
-                        // token is approved and sufficiently available
-                        _e.sent();
                         hashedOrder = __assign(__assign({}, order), { hash: (0, utils_1.getOrderHash)(order) });
-                        _e.label = 3;
-                    case 3:
-                        _e.trys.push([3, 5, , 6]);
+                        _e.label = 2;
+                    case 2:
+                        _e.trys.push([2, 4, , 5]);
                         return [4 /*yield*/, this.authorizeOrder(hashedOrder)];
-                    case 4:
+                    case 3:
                         signature = _e.sent();
-                        return [3 /*break*/, 6];
-                    case 5:
+                        return [3 /*break*/, 5];
+                    case 4:
                         error_2 = _e.sent();
                         console.error(error_2);
                         throw new Error("You declined to authorize your offer");
-                    case 6:
+                    case 5:
                         orderWithSignature = __assign(__assign({}, hashedOrder), signature);
                         return [2 /*return*/, this.validateAndPostOrder(orderWithSignature)];
                 }
