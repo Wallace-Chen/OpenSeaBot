@@ -197,7 +197,7 @@ const seaport_0 = new OpenSeaPort(
       NETWORK === "mainnet" || NETWORK === "live"
         ? Network.Main
         : Network.Rinkeby,
-    apiKey: api_keys[2], 
+    apiKey: api_keys[1], 
   },
   (arg) => console.log(arg)
 );
@@ -208,7 +208,7 @@ const seaport_1 = new OpenSeaPort(
       NETWORK === "mainnet" || NETWORK === "live"
         ? Network.Main
         : Network.Rinkeby,
-    apiKey: api_keys[1],
+    apiKey: api_keys[2],
   },
   (arg) => console.log(arg)
 );
@@ -216,7 +216,7 @@ const seaport_1 = new OpenSeaPort(
 const seaports = [seaport_0, seaport_1];
 
 function getAPIKey(){
-    idx = (idx + 1) % 2;
+    idx = (idx + 1) % 1;
     var _i = idx;
 //    idx = (idx + 1) % 3;
 //    var _i = parseInt(idx/2);
@@ -351,7 +351,7 @@ async function getTopOffers(tokenId){
   let results;
   while(!suc){
     try{
-      results = await getSeaport().api.getOrders({
+      results = await seaports[0].api.getOrders({
         asset_contract_address: NFT_CONTRACT_ADDRESS,
         token_id: tokenId,
         side: 0,
@@ -507,7 +507,7 @@ async function getSellOrderFromItem(id){
   var suc = false;
   while(!suc){
   try{
-    order = await getSeaport().api.getOrder({
+    order = await seaports[0].api.getOrder({
         asset_contract_address: NFT_CONTRACT_ADDRESS,
         token_ids: id,
         side: 1, //OrderSide.Sell,
@@ -626,7 +626,7 @@ async function makeOffer(_tokenId, price, valids){
     while(!suc && times_remaining>0){
         times_remaining = times_remaining - 1;
         try{
-            offer = await getSeaport().createBuyOrder({
+            offer = await seaports[1].createBuyOrder({
                 asset: {
                 tokenId: _tokenId,
                 tokenAddress: NFT_CONTRACT_ADDRESS
@@ -664,7 +664,7 @@ async function main() {
   let asset;
   while(!flag){
     try{
-      asset = await getSeaport().api.getAsset({tokenAddress:NFT_CONTRACT_ADDRESS, tokenId:"1"});
+      asset = await seaports[0].api.getAsset({tokenAddress:NFT_CONTRACT_ADDRESS, tokenId:"1"});
       flag = true;
     }catch(e){
       console.log("Error fetching the data from OpenSea" + e);
