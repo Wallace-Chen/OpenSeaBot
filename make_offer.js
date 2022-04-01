@@ -28,7 +28,7 @@ var BELOW_FP = true;
 var LOW_RATIO = 0.5; // our offer price will start from LOW_RATIO*FP
 var TOP_RATIO = 0.8; // the top offer price is TOP_RATIO*FP
 var TARGET_RATIO = 1.5; // when list price is under TARGET_RATIO*FP, we will make offer
-var TOP_PRICE = 8; // the hard coded top offer limit
+var TOP_PRICE = 8.7; // the hard coded top offer limit
 var offer_valid = 900; // seconds for which our offer is valid
 
 // MAYC, 5% fee
@@ -97,10 +97,16 @@ var offer_valid = 900; // seconds for which our offer is valid
 //TARGET_RATIO = 2;
 
 // BAKC 2.5%
-const NFT_CONTRACT_ADDRESS = "0xba30e5f9bb24caa003e9f2f0497ad287fdf95623";
-LOW_RATIO = 0.8;
-TOP_RATIO = 0.931;
-TARGET_RATIO = 1.5;
+//const NFT_CONTRACT_ADDRESS = "0xba30e5f9bb24caa003e9f2f0497ad287fdf95623";
+//LOW_RATIO = 0.8;
+//TOP_RATIO = 0.931;
+//TARGET_RATIO = 1.5;
+
+// world of women 6.5%
+//const NFT_CONTRACT_ADDRESS = "0xe785e82358879f061bc3dcac6f0444462d4b5330";
+//LOW_RATIO = 0.75;
+//TOP_RATIO = 0.901;
+//TARGET_RATIO = 1.5;
 
 // mfers 5%
 //const NFT_CONTRACT_ADDRESS = "0x79fcdef22feed20eddacbb2587640e45491b757f";
@@ -109,10 +115,10 @@ TARGET_RATIO = 1.5;
 //TARGET_RATIO = 1.5;
 
 // cyberkongz 5%
-//const NFT_CONTRACT_ADDRESS = "0x57a204aa1042f6e66dd7730813f4024114d74f37";
-//LOW_RATIO = 0.8;
-//TOP_RATIO = 0.891;
-//TARGET_RATIO = 1.5;
+const NFT_CONTRACT_ADDRESS = "0x57a204aa1042f6e66dd7730813f4024114d74f37";
+LOW_RATIO = 0.8;
+TOP_RATIO = 0.891;
+TARGET_RATIO = 1.5;
 
 // sandbox 5%
 //const NFT_CONTRACT_ADDRESS = "0x5cc5b05a8a13e3fbdb0bb9fccd98d38e50f90c38";
@@ -136,7 +142,7 @@ TARGET_RATIO = 1.5;
 const api_keys = [
 "3940c5b8cf4a4647bc22ff9b0a84f75a",
 "f87d8ef226cd45b0b89d7c4b001ff74d",
-"f9db001792614c0ea01ef78616d6d2be"
+"f9db001792614c0ea01ef78616d6d2be",
 ];
 var idx = 0;
 var idx_seaport = 0;
@@ -191,7 +197,7 @@ const seaport_0 = new OpenSeaPort(
       NETWORK === "mainnet" || NETWORK === "live"
         ? Network.Main
         : Network.Rinkeby,
-    apiKey: api_keys[0],
+    apiKey: api_keys[2], 
   },
   (arg) => console.log(arg)
 );
@@ -206,34 +212,31 @@ const seaport_1 = new OpenSeaPort(
   },
   (arg) => console.log(arg)
 );
-const seaport_2 = new OpenSeaPort(
-  providerEngine,
-  {
-    networkName:
-      NETWORK === "mainnet" || NETWORK === "live"
-        ? Network.Main
-        : Network.Rinkeby,
-    apiKey: api_keys[2],
-  },
-  (arg) => console.log(arg)
-);
 
-const seaports = [seaport_0, seaport_1, seaport_2];
+const seaports = [seaport_0, seaport_1];
 
 function getAPIKey(){
-    idx = (idx + 1) % 3;
-    return api_keys[idx];
+    idx = (idx + 1) % 2;
+    var _i = idx;
+//    idx = (idx + 1) % 3;
+//    var _i = parseInt(idx/2);
+    console.log("using the key: " + api_keys[_i]);
+    return api_keys[_i];
 }
 
 function getSeaport(){
-    idx_seaport = (idx_seaport + 1) % 3;
-    return seaports[idx_seaport];
+    idx_seaport = (idx_seaport + 1) % 2;
+    var _i = idx_seaport;
+//    idx_seaport = (idx_seaport + 1) % 3;
+//    var _i = parseInt(idx_seaport/2);
+    console.log( "using seaport #" + _i );
+    return seaports[_i];
 }
 
 function convertUnix(timeString){
   var time = new Date(timeString+'Z');
   return parseInt( Date.parse(time.toUTCString()) / 1000 );
-  return parseInt( Date.parse(time) / 1000 );
+  //return parseInt( Date.parse(time) / 1000 );
 }
 
 async function getBalance(wallet){
@@ -258,7 +261,9 @@ async function getBalance(wallet){
 async function getEvents(afterTime, _evt) {
   let payment_token = '0x0000000000000000000000000000000000000000';
   if(_evt == "created"){
+    console.log("checking for newly-created orders...");
   }else if(_evt == "offer_entered"){
+    console.log("checking for new offers...");
     payment_token = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2';
   }else{
     return [[], 0];
@@ -270,62 +275,74 @@ async function getEvents(afterTime, _evt) {
     asset_contract_address: NFT_CONTRACT_ADDRESS,
     only_opensea: true,
     event_type: _evt,
-    limit: 50,
+    limit: 200,
+    occurred_after: afterTime
 //    occurred_before: afterTime,
 //    auction_type: 'dutch'
   };
   var allEvents = [];
   var price_map = {};
   var valid = true;
-  try{
-    while(true){
-      const response = await axios.get(url, {
-        params: params,
-        headers: {Accept: 'application/json', 'X-API-KEY': getAPIKey()},
-      });
-      if(response.status !== 200){
-        throw new Error("[getEvents] Failed to get events: "+String(response.status));
+  while(true){
+    let response;
+    let events;
+    try{
+        response = await fetch( url+'?occurred_after='+params.occurred_after+'&event_type='+params.event_type+'&asset_contract_address='+params.asset_contract_address+'&only_opensea='+params.only_opensea+"&limit="+params.limit, {
+          method: 'GET',
+          headers: {Accept: 'application/json', 'X-API-KEY': getAPIKey()}
+       }).then(response => response.json());
+//      response = await axios.get(url, {
+//        params: params,
+//        headers: {Accept: 'application/json', 'X-API-KEY': getAPIKey()},
+//      });
+      events = response.asset_events;
+      if( events == undefined ){
+        throw new Error("[getEvents] Failed to get events: "+String(response.detail));
       }
-      const events = response.data["asset_events"];
-      for(const e of events){
-        if( convertUnix(e.created_date) < afterTime ){
-          valid = false;
-          break;
-        }
-        if( !e.is_private && e.payment_token.address == payment_token ){
-          allEvents.push(e);
-        }
-      }
-
-      if( !valid ){
+//      if(response.status !== 200){
+//        throw new Error("[getEvents] Failed to get events: "+String(response.status));
+//      }
+    }catch(e){
+      console.log("Error: getEvents: "+e);
+      await sleep(1000);
+      continue;
+    }
+//    const events = response.data["asset_events"];
+    for(const e of events){
+      if( convertUnix(e.created_date) < afterTime ){
+        valid = false;
         break;
       }
-      params.cursor = response.data.next;
-    }
-    if(_evt == "offer_entered"){
-      return [allEvents, 1];
-    }
-    allEvents.forEach( evt => {
-      if(evt && evt.asset && evt.asset.token_id){
-        if(!(evt.asset.token_id in price_map)){
-          price_map[evt.asset.token_id] = parseFloat(web3.utils.fromWei(evt.ending_price, "ether"));
-        }else{
-          price_map[evt.asset.token_id] = Math.min(price_map[evt.asset.token_id], parseFloat(web3.utils.fromWei(evt.ending_price, "ether")));
-        }
+      if( !e.is_private && e.payment_token.address == payment_token ){
+        allEvents.push(e);
       }
-    });
-    var items = Object.keys(price_map).map( key => {
-      return [key, price_map[key]];
-    });
-    items.sort( (first, second) => {
-      return first[1] - second[1];
-    });
-    return [items, 1];
-  } catch (e){
-    console.log("Error: getEvents: "+e);
-    return [[], 0];
-  }
+    }
 
+    if( !valid || response.next == null || allEvents.length >= 400){
+      break;
+    }
+    params.cursor = response.next;
+    console.log(" checking next page... ");
+  }
+  if(_evt == "offer_entered"){
+    return [allEvents, 1];
+  }
+  allEvents.forEach( evt => {
+    if(evt && evt.asset && evt.asset.token_id){
+      if(!(evt.asset.token_id in price_map)){
+        price_map[evt.asset.token_id] = parseFloat(web3.utils.fromWei(evt.ending_price, "ether"));
+      }else{
+        price_map[evt.asset.token_id] = Math.min(price_map[evt.asset.token_id], parseFloat(web3.utils.fromWei(evt.ending_price, "ether")));
+      }
+    }
+  });
+  var items = Object.keys(price_map).map( key => {
+    return [key, price_map[key]];
+  });
+  items.sort( (first, second) => {
+    return first[1] - second[1];
+  });
+  return [items, 1];
 }
 
 async function getTopOffers(tokenId){
@@ -504,26 +521,30 @@ async function getSellOrderFromItem(id){
       });
       suc = true;
    }catch(e){
-     return {};
+     console.log("Error in getSellOrderFromItem: " + e);
+     await sleep(1000);
+     continue;
    }
   }
   return order;
 }
 
 async function getCollection(slug){
-  const options = {
-    method: 'GET',
-    headers: {Accept: 'application/json', 'X-API-KEY': getAPIKey()}
-  };
   var suc = false;
   while(!suc){
+    const options = {
+        method: 'GET',
+        headers: {Accept: 'application/json', 'X-API-KEY': getAPIKey()}
+    };
     try{
         var data = await fetch('https://api.opensea.io/api/v1/collection/'+slug, options).then( response => response.json() );
-        if(data.collection.stats.floor_price == undefined) continue;
+        if(data.collection.stats.floor_price == undefined) throw new Error("[getCollection] Cannot get stats of the collection. ");;
+          await sleep(1000);
         return data; 
     }catch (e){
         console.log("Error in getCllection: " + e);
         suc = false;
+        await sleep(1000);
     }
   }
 }
@@ -556,7 +577,7 @@ async function listenGoodOrder(unix, thred, slug, interval=20){
     if( ids_offered.size > 0 ){
       [offers, bid_res] = await getEvents(bid_time_after, "offer_entered");
       if(bid_res){
-        bid_time_after = Math.round(Date.now() / 1000) - 1;
+        bid_time_after = Math.round(Date.now() / 1000);
       }
       if(offers.length > 0){
         console.log("checking offers from " + timestapConvert(bid_time_after));
@@ -570,7 +591,6 @@ async function listenGoodOrder(unix, thred, slug, interval=20){
       update_time = Math.round(Date.now() / 1000);
       ids_offered = await updateOffers(ids_offered);
     }
-    await sleep(1000*interval);
 
     // check new listings
     console.log("checking sell orders from " + timestapConvert(time_after));
@@ -578,6 +598,7 @@ async function listenGoodOrder(unix, thred, slug, interval=20){
     if(res){
       time_after = Math.round(Date.now() / 1000);
     }
+    await sleep(1000*interval);
   }
 
   var good_orders = [];
@@ -599,7 +620,7 @@ async function makeOffer(_tokenId, price, valids){
         return false;
     }
     const endTime = Math.round(Date.now() / 1000 + valids);
-    var times_remaining = 1;
+    var times_remaining = 10;
     var suc = false;
     let offer;
     while(!suc && times_remaining>0){
@@ -618,6 +639,8 @@ async function makeOffer(_tokenId, price, valids){
         suc = true;
         }catch(e){
             console.log('Error in makeOffer: ' + e);
+            await sleep(1000);
+            continue;
         }
     }
     return suc;
@@ -644,7 +667,7 @@ async function main() {
       asset = await getSeaport().api.getAsset({tokenAddress:NFT_CONTRACT_ADDRESS, tokenId:"1"});
       flag = true;
     }catch(e){
-      console.log("Error fetching the data from OpenSea");
+      console.log("Error fetching the data from OpenSea" + e);
       flag = false;
       await sleep(2000);
     }
@@ -658,7 +681,6 @@ async function main() {
 
   console.log("The floor price of " + slug + " is: ")
   console.log( FP );
-
 
 //  var sell_order = await getSellOrderFromItem("4255");
 //  console.log(sell_order);
